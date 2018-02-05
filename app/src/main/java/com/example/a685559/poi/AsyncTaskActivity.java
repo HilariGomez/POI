@@ -34,21 +34,6 @@ public class AsyncTaskActivity extends Activity {
         new LongOperation().execute("");
     }
 
-    public Call<ListResponse> getResponseList() {
-        Gson gson = new GsonBuilder()
-                .setLenient()
-                .create();
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://t21services.herokuapp.com/")
-                .build();
-
-        ServiceList serviceList = retrofit.create(ServiceList.class);
-
-        Call<ListResponse> response = serviceList.getPointsOfInterest();
-        return response;
-    }
-
     public String getAndReadUrl() {
         String result = "";
         URL url = null;

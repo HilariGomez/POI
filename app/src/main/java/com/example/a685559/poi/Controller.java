@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -13,12 +14,12 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Controller implements Callback<ListResponse> {
 
-    static final String BASE_URL = "https://t21services.herokuapp.com/";
+    private static final String BASE_URL = "https://t21services.herokuapp.com/";
 
-    ArrayList<InterestPoint> poiList;
+    private PointOfInterestListener listener;
 
-    public ArrayList<InterestPoint> getPoiList() {
-        return poiList;
+    public Controller(PointOfInterestListener listener) {
+        this.listener = listener;
     }
 
     public void start(Integer num) {
@@ -32,12 +33,12 @@ public class Controller implements Callback<ListResponse> {
                 .build();
 
         if (num == 0) {
-            ServiceList ServiceList = retrofit.create(ServiceList.class);
-            Call<ListResponse> call = ServiceList.getPointsOfInterest();
+            Service service = retrofit.create(Service.class);
+            Call<ListResponse> call = service.getPointsOfInterest();
             call.enqueue(this);
         } else {
-            ServicePoint servicePoint = retrofit.create(ServicePoint.class);
-            Call<ListResponse> call = servicePoint.getPoint(num.toString());
+            Service service = retrofit.create(Service.class);
+            Call<ListResponse> call = service.getPoint(num.toString());
             call.enqueue(this);
         }
 
@@ -47,14 +48,24 @@ public class Controller implements Callback<ListResponse> {
     public void onResponse(Call<ListResponse> call, Response<ListResponse> response) {
         if (response.isSuccessful()) {
             ListResponse responseList = response.body();
-            poiList = responseList.getList();
+            listener.onPointListSuccess(responseList.getList());
         } else {
+            listener.onError();
             System.out.println(response.errorBody());
         }
     }
 
     @Override
     public void onFailure(Call<ListResponse> call, Throwable t) {
+        listener.onError();
         t.printStackTrace();
+    }
+
+    public interface PointOfInterestListener {
+        void onPointListSuccess(List<InterestPoint> poiList);
+
+        void onPointDetailSuccess(InterestPoint interestPoint);
+
+        void onError();
     }
 }

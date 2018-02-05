@@ -10,9 +10,8 @@ public class InterestPoint implements Serializable {
 
     private String title;
 
-    @SerializedName("geoCoordinates")
+    @SerializedName("geocoordinates")
     private String geoCoordinates;
-
 
     public InterestPoint(String id, String title, String geoCoordinates) {
         this.id = id;
