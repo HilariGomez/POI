@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="poi_layout_height">65dp</dimen>
+    <dimen name="margin_left_poi_row">16dp</dimen>
+
+</resources>
