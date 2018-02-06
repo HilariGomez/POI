@@ -2,6 +2,7 @@ package com.example.a685559.poi;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
 public class OnDetailActivity extends Activity implements InterestPointController.PointOfInterestListener {
@@ -17,12 +18,13 @@ public class OnDetailActivity extends Activity implements InterestPointControlle
         InterestPoint poi = (InterestPoint) b.get("POI");
 
         InterestPointController interestPointController = new InterestPointController(this);
-        Integer index = Integer.parseInt(poi.getId()) + 1;
-        interestPointController.start(index.toString());
+        interestPointController.start(poi.getId());
     }
 
     @Override
     public void onPointDetailSuccess(InterestPoint poi) {
+        findViewById(R.id.loadingPanel).setVisibility(View.GONE);
+
         title = (TextView) findViewById(R.id.detailPoiTitle);
         address = (TextView) findViewById(R.id.detailPoiAdress);
         transport = (TextView) findViewById(R.id.detailPoiTransport);

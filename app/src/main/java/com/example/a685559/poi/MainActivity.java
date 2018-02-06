@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +29,8 @@ public class MainActivity extends AppCompatActivity implements ListController.Po
 
     @Override
     public void onPointListSuccess(List<InterestPoint> poiList) {
+        findViewById(R.id.loadingPanel).setVisibility(View.GONE);
+
         ArrayList<InterestPoint> poi = new ArrayList<>();
         poi.addAll(poiList);
 
