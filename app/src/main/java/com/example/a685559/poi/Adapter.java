@@ -8,13 +8,12 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.List;
 
-public class Adapter extends RecyclerView.Adapter<Adapter.MyViewHolder> implements ListController.PoiListListener {
+public class Adapter extends RecyclerView.Adapter<Adapter.MyViewHolder> {
 
     private ArrayList<InterestPoint> POIlist;
 
-    private InterestPointController.PointOfInterestListener listener;
+    private ListController.PoiListListener listener;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView title, id, geo;
@@ -27,11 +26,21 @@ public class Adapter extends RecyclerView.Adapter<Adapter.MyViewHolder> implemen
             id = (TextView) view.findViewById(R.id.poi_id);
             geo = (TextView) view.findViewById(R.id.poi_geo);
             info = (ImageButton) view.findViewById(R.id.info);
+
+            info.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int index = getAdapterPosition();
+                    InterestPoint selectedItem = POIlist.get(index);
+                    listener.onPointDetail(selectedItem);
+                }
+            });
         }
     }
 
-    public Adapter(ArrayList<InterestPoint> POIlist) {
+    public Adapter(ArrayList<InterestPoint> POIlist, ListController.PoiListListener listener) {
         this.POIlist = POIlist;
+        this.listener = listener;
     }
 
     @Override
@@ -55,12 +64,4 @@ public class Adapter extends RecyclerView.Adapter<Adapter.MyViewHolder> implemen
         return POIlist != null ? POIlist.size() : 0;
     }
 
-    @Override
-    public void onPointListSuccess(List<InterestPoint> poiList) {
-    }
-
-    @Override
-    public void onError() {
-
-    }
 }

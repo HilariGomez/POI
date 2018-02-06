@@ -1,5 +1,6 @@
 package com.example.a685559.poi;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -31,12 +32,21 @@ public class MainActivity extends AppCompatActivity implements ListController.Po
         poi.addAll(poiList);
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        mAdapter = new Adapter(poi);
+        mAdapter = new Adapter(poi, this);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(mAdapter);
     }
+
+
+    @Override
+    public void onPointDetail(InterestPoint poi) {
+        Intent i = new Intent(this, OnDetailActivity.class);
+        i.putExtra("POI", poi);
+        startActivity(i);
+    }
+
 
     @Override
     public void onError() {

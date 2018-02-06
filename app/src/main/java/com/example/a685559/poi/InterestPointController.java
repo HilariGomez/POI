@@ -7,8 +7,6 @@ package com.example.a685559.poi;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -22,10 +20,13 @@ public class InterestPointController implements Callback<InterestPoint> {
     private PointOfInterestListener listener;
 
     public InterestPointController(PointOfInterestListener listener) {
+        if (listener == null) {
+            throw new IllegalArgumentException("Listener can't be null!");
+        }
         this.listener = listener;
     }
 
-    public void start(Integer num) {
+    public void start(String index) {
         Gson gson = new GsonBuilder()
                 .setLenient()
                 .create();
@@ -36,13 +37,15 @@ public class InterestPointController implements Callback<InterestPoint> {
                 .build();
 
         Service service = retrofit.create(Service.class);
-        Call<InterestPoint> call = service.getPoint(num.toString());
+        Call<InterestPoint> call = service.getPoint(index);
         call.enqueue(this);
     }
 
     @Override
     public void onResponse(Call<InterestPoint> call, Response<InterestPoint> response) {
         if (response.isSuccessful()) {
+            InterestPoint responsePoi = response.body();
+            listener.onPointDetailSuccess(responsePoi);
         } else {
             listener.onError();
             System.out.println(response.errorBody());
@@ -56,7 +59,7 @@ public class InterestPointController implements Callback<InterestPoint> {
     }
 
     public interface PointOfInterestListener {
-        void onPointDetailSuccess(List<InterestPoint> poiList);
+        void onPointDetailSuccess(InterestPoint poi);
 
         void onError();
     }
