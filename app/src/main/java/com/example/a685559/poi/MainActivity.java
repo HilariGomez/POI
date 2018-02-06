@@ -9,19 +9,19 @@ import android.support.v7.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements Controller.PointOfInterestListener {
+public class MainActivity extends AppCompatActivity implements ListController.PoiListListener {
 
     private RecyclerView recyclerView;
 
-    private POIAdapter mAdapter;
+    private Adapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Controller controller = new Controller(this);
-        controller.start(0);
+        ListController listController = new ListController(this);
+        listController.start();
     }
 
 
@@ -31,16 +31,11 @@ public class MainActivity extends AppCompatActivity implements Controller.PointO
         poi.addAll(poiList);
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        mAdapter = new POIAdapter(poi);
+        mAdapter = new Adapter(poi);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(mAdapter);
-    }
-
-    @Override
-    public void onPointDetailSuccess(InterestPoint interestPoint) {
-
     }
 
     @Override

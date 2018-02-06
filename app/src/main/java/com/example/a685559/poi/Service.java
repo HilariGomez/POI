@@ -9,5 +9,5 @@ public interface Service {
     Call<ListResponse> getPointsOfInterest();
 
     @GET("points/{id}")
-    Call<ListResponse> getPoint(@Path("id") String id);
+    Call<InterestPoint> getPoint(@Path("id") String id);
 }

@@ -1,5 +1,9 @@
 package com.example.a685559.poi;
 
+/**
+ * Created by A685559 on 06/02/2018.
+ */
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -11,13 +15,13 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class Controller implements Callback<ListResponse> {
+public class InterestPointController implements Callback<InterestPoint> {
 
     private static final String BASE_URL = "https://t21services.herokuapp.com/";
 
     private PointOfInterestListener listener;
 
-    public Controller(PointOfInterestListener listener) {
+    public InterestPointController(PointOfInterestListener listener) {
         this.listener = listener;
     }
 
@@ -31,23 +35,14 @@ public class Controller implements Callback<ListResponse> {
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
 
-        if (num == 0) {
-            Service service = retrofit.create(Service.class);
-            Call<ListResponse> call = service.getPointsOfInterest();
-            call.enqueue(this);
-        } else {
-            Service service = retrofit.create(Service.class);
-            Call<ListResponse> call = service.getPoint(num.toString());
-            call.enqueue(this);
-        }
-
+        Service service = retrofit.create(Service.class);
+        Call<InterestPoint> call = service.getPoint(num.toString());
+        call.enqueue(this);
     }
 
     @Override
-    public void onResponse(Call<ListResponse> call, Response<ListResponse> response) {
+    public void onResponse(Call<InterestPoint> call, Response<InterestPoint> response) {
         if (response.isSuccessful()) {
-            ListResponse responseList = response.body();
-            listener.onPointListSuccess(responseList.getList());
         } else {
             listener.onError();
             System.out.println(response.errorBody());
@@ -55,15 +50,13 @@ public class Controller implements Callback<ListResponse> {
     }
 
     @Override
-    public void onFailure(Call<ListResponse> call, Throwable t) {
+    public void onFailure(Call<InterestPoint> call, Throwable t) {
         listener.onError();
         t.printStackTrace();
     }
 
     public interface PointOfInterestListener {
-        void onPointListSuccess(List<InterestPoint> poiList);
-
-        void onPointDetailSuccess(InterestPoint interestPoint);
+        void onPointDetailSuccess(List<InterestPoint> poiList);
 
         void onError();
     }
