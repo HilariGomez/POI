@@ -1,13 +1,19 @@
 package com.example.a685559.poi;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements Controller.PointOfInterestListener {
+
+    private RecyclerView recyclerView;
+
+    private POIAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,11 +29,13 @@ public class MainActivity extends AppCompatActivity implements Controller.PointO
     public void onPointListSuccess(List<InterestPoint> poiList) {
         ArrayList<InterestPoint> poi = new ArrayList<>();
         poi.addAll(poiList);
-        Intent i = new Intent(getApplicationContext(), POIListActivity.class);
-        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        i.putExtra("POILIST", poi);
-        startActivity(i);
-        finish();
+
+        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        mAdapter = new POIAdapter(poi);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(mAdapter);
     }
 
     @Override
