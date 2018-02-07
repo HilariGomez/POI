@@ -3,7 +3,7 @@ package com.example.a685559.poi;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -54,7 +54,7 @@ public class ListController implements Callback<ListResponse> {
     }
 
     public interface PoiListListener {
-        void onPointListSuccess(List<InterestPoint> poiList);
+        void onPointListSuccess(ArrayList<InterestPoint> poiList);
         void onPointDetail(InterestPoint poi);
         void onError();
     }

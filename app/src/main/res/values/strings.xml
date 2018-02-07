@@ -1,8 +1,8 @@
 <resources>
-    <string name="app_name">POI</string>
+    <string name="app_name">Points of Interest</string>
     <string name="titolDebug">Títol</string>
     <string name="idDebug">Id</string>
     <string name="geoDebug">Geo</string>
-    <string name="mainTitle">Interest Points</string>
+    <string name="mainTitle">Barcelona</string>
 
 </resources>
