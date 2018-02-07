@@ -17,7 +17,11 @@ public class MainActivity extends AppCompatActivity implements ListController.Po
 
     private Adapter mAdapter;
 
+    private ArrayList<InterestPoint> poiList;
+
     private SwipeRefreshLayout swipeRefreshLayout;
+
+    boolean b = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +51,8 @@ public class MainActivity extends AppCompatActivity implements ListController.Po
     @Override
     public void onPointListSuccess(ArrayList<InterestPoint> poiList) {
         findViewById(R.id.loadingPanel).setVisibility(View.GONE);
+        this.poiList = poiList;
+        b = true;
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         mAdapter = new Adapter(poiList, this);
@@ -54,6 +60,8 @@ public class MainActivity extends AppCompatActivity implements ListController.Po
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(mAdapter);
+
+
     }
 
 
@@ -70,4 +78,11 @@ public class MainActivity extends AppCompatActivity implements ListController.Po
 
     }
 
+    public void openMap(View view) {
+        if (b) {
+            Intent i = new Intent(this, MapsActivity.class);
+            i.putExtra("POILIST", this.poiList);
+            startActivity(i);
+        }
+    }
 }

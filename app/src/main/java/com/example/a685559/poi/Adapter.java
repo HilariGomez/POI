@@ -4,7 +4,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -18,16 +17,13 @@ public class Adapter extends RecyclerView.Adapter<Adapter.MyViewHolder> {
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView title, id, geo;
 
-        public ImageButton info;
-
         public MyViewHolder(View view) {
             super(view);
             title = (TextView) view.findViewById(R.id.poi_title);
             id = (TextView) view.findViewById(R.id.poi_id);
             geo = (TextView) view.findViewById(R.id.poi_geo);
-            info = (ImageButton) view.findViewById(R.id.info);
 
-            info.setOnClickListener(new View.OnClickListener() {
+            view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     int index = getAdapterPosition();
