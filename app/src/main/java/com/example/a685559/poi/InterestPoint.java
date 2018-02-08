@@ -1,10 +1,12 @@
 package com.example.a685559.poi;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.annotations.SerializedName;
+import com.google.maps.android.clustering.ClusterItem;
 
 import java.io.Serializable;
 
-public class InterestPoint implements Serializable {
+public class InterestPoint implements Serializable, ClusterItem {
 
     private String id;
 
@@ -91,6 +93,21 @@ public class InterestPoint implements Serializable {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    @Override
+    public LatLng getPosition(){
+        String lat= "0";
+        String lng = "0";
+        boolean b=true;
+        for (int i = 0; i < geoCoordinates.length() && b; ++i) {
+            if (geoCoordinates.charAt(i) == ',') {
+                lat = geoCoordinates.substring(0, i);
+                lng = geoCoordinates.substring(i + 1, geoCoordinates.length());
+                b = false;
+            }
+        }
+        return new LatLng(Double.parseDouble(lat), Double.parseDouble(lng));
     }
 
     @Override

@@ -5,7 +5,8 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.android.clustering.Cluster;
+import com.google.maps.android.clustering.ClusterManager;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -17,6 +18,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap mMap;
 
     ArrayList<InterestPoint> poiList;
+
+    ClusterManager clusterManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,27 +33,54 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         poiList = (ArrayList<InterestPoint>) b.get("POILIST");
     }
 
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
+    public void initCluster() {
+        clusterManager = new ClusterManager<>(getApplicationContext(), mMap);
+        clusterManager.setRenderer(new OurClusterRenderer(getApplicationContext(), mMap, clusterManager));
+        mMap.setOnCameraChangeListener(clusterManager);
+        mMap.setOnMarkerClickListener(clusterManager);
+        mMap.setOnInfoWindowClickListener(clusterManager);
+        mMap.setInfoWindowAdapter(clusterManager.getMarkerManager());
+        mMap.setOnInfoWindowClickListener(clusterManager);
 
-        for (InterestPoint poi : poiList) {
-            String lat = "0";
-            String lng = "0";
-            String geo = poi.getGeoCoordinates();
-            boolean b = true;
-            for (int i = 0; i < geo.length() && b; ++i) {
-                if (geo.charAt(i) == ',') {
-                    lat = geo.substring(0, i);
-                    lng = geo.substring(i + 1, geo.length());
-                    b = false;
-                }
+        clusterManager.setOnClusterClickListener(new ClusterManager.OnClusterClickListener() {
+            @Override
+            public boolean onClusterClick(Cluster cluster) {
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
+                        cluster.getPosition(), (float) Math.floor(mMap
+                                .getCameraPosition().zoom + 1)), 300,
+                        null);
+                return true;
             }
-            LatLng position = new LatLng(Double.parseDouble(lat), Double.parseDouble(lng));
-            mMap.addMarker(new MarkerOptions().position(position).title(poi.getTitle()));
+        });
+
+        /*clusterManager.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener() {
+            @Override
+            public boolean onClusterItemClick(StoreAroundMeModel storeAroundMeModel) {
+                //Do stuff
+            });
+        }*/
+    }
+
+    public void loadMapData() {
+        clusterManager.clearItems();
+        for (InterestPoint poi : poiList) {
+            clusterManager.addItem(poi);
+            //mMap.addMarker(new MarkerOptions().position(poi.getPosition()).title(poi.getTitle()));
         }
+        clusterManager.cluster();
+    }
+
+    public void setStartPosition() {
         LatLng iniPos = new LatLng(41.391926, 2.165208);
         mMap.moveCamera(CameraUpdateFactory.newLatLng(iniPos));
         mMap.setMinZoomPreference(12);
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+        initCluster();
+        loadMapData();
+        setStartPosition();
     }
 }

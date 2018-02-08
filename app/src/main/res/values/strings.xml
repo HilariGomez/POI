@@ -4,5 +4,6 @@
     <string name="idDebug">Id</string>
     <string name="geoDebug">Geo</string>
     <string name="mainTitle">Barcelona</string>
+    <string name="menuMap">menu_map</string>
 
 </resources>
