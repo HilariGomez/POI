@@ -28,7 +28,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.MyViewHolder> {
                 public void onClick(View view) {
                     int index = getAdapterPosition();
                     InterestPoint selectedItem = POIlist.get(index);
-                    listener.onPointDetail(selectedItem);
+                    listener.onPointDetail(selectedItem.getId());
                 }
             });
         }

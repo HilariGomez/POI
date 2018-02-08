@@ -5,8 +5,8 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.maps.android.clustering.Cluster;
-import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.clustering.ClusterManager;
 
 import android.content.Intent;
@@ -41,8 +41,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setOnCameraChangeListener(clusterManager);
         mMap.setOnMarkerClickListener(clusterManager);
         mMap.setOnInfoWindowClickListener(clusterManager);
-        mMap.setInfoWindowAdapter(clusterManager.getMarkerManager());
-        mMap.setOnInfoWindowClickListener(clusterManager);
+
+        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                String title = marker.getTitle();
+                String id = "1";
+                boolean b = true;
+                int i = 0;
+                while (i < title.length() && title.charAt(i) > '0' && title.charAt(i) <= '9') {
+                    ++i;
+                }
+                id = title.substring(0, i);
+                onPointDetail(id);
+            }
+        });
 
         clusterManager.setOnClusterClickListener(new ClusterManager.OnClusterClickListener() {
             @Override
@@ -55,21 +68,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
-        clusterManager.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener() {
+        //go to detail by clicking the marker instead of the title
+        /*clusterManager.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener() {
 
             @Override
             public boolean onClusterItemClick(ClusterItem clusterItem) {
                 InterestPoint poi = (InterestPoint) clusterItem;
-                onPointDetail(poi);
+                onPointDetail(poi.getId());
                 return false;
             }
-        });
+        });*/
     }
 
     public void loadMapData() {
         clusterManager.clearItems();
         for (InterestPoint poi : poiList) {
-            clusterManager.addItem(poi);
+            InterestPoint poi2 = poi;
+            poi2.setTitle(poi.getId() + " " + poi.getTitle());
+            clusterManager.addItem(poi2);
         }
         clusterManager.cluster();
     }
@@ -94,9 +110,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     @Override
-    public void onPointDetail(InterestPoint poi) {
+    public void onPointDetail(String id) {
         Intent i = new Intent(this, OnDetailActivity.class);
-        i.putExtra("POI", poi);
+        i.putExtra("ID", id);
         startActivity(i);
     }
 

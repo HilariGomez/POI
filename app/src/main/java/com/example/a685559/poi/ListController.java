@@ -55,7 +55,9 @@ public class ListController implements Callback<ListResponse> {
 
     public interface PoiListListener {
         void onPointListSuccess(ArrayList<InterestPoint> poiList);
-        void onPointDetail(InterestPoint poi);
+
+        void onPointDetail(String id);
+
         void onError();
     }
 }

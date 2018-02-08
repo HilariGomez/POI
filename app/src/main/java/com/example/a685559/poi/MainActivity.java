@@ -90,9 +90,9 @@ public class MainActivity extends AppCompatActivity implements ListController.Po
 
 
     @Override
-    public void onPointDetail(InterestPoint poi) {
+    public void onPointDetail(String id) {
         Intent i = new Intent(this, OnDetailActivity.class);
-        i.putExtra("POI", poi);
+        i.putExtra("ID", id);
         startActivity(i);
     }
 

@@ -31,15 +31,14 @@ public class OnDetailActivity extends AppCompatActivity implements InterestPoint
                     }
                 }
         );
-
         fetchPoi();
     }
 
     public void fetchPoi() {
         Bundle b = getIntent().getExtras();
-        InterestPoint poi = (InterestPoint) b.get("POI");
+        String id = (String) b.get("ID");
         InterestPointController interestPointController = new InterestPointController(this);
-        interestPointController.start(poi.getId());
+        interestPointController.start(id);
     }
 
     @Override
