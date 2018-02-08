@@ -6,14 +6,16 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.Cluster;
+import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.clustering.ClusterManager;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
 import java.util.ArrayList;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, ListController.PoiListListener {
 
     private GoogleMap mMap;
 
@@ -53,19 +55,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
-        /*clusterManager.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener() {
+        clusterManager.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener() {
+
             @Override
-            public boolean onClusterItemClick(StoreAroundMeModel storeAroundMeModel) {
-                //Do stuff
-            });
-        }*/
+            public boolean onClusterItemClick(ClusterItem clusterItem) {
+                InterestPoint poi = (InterestPoint) clusterItem;
+                onPointDetail(poi);
+                return false;
+            }
+        });
     }
 
     public void loadMapData() {
         clusterManager.clearItems();
         for (InterestPoint poi : poiList) {
             clusterManager.addItem(poi);
-            //mMap.addMarker(new MarkerOptions().position(poi.getPosition()).title(poi.getTitle()));
         }
         clusterManager.cluster();
     }
@@ -82,5 +86,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         initCluster();
         loadMapData();
         setStartPosition();
+    }
+
+    @Override
+    public void onPointListSuccess(ArrayList<InterestPoint> poiList) {
+
+    }
+
+    @Override
+    public void onPointDetail(InterestPoint poi) {
+        Intent i = new Intent(this, OnDetailActivity.class);
+        i.putExtra("POI", poi);
+        startActivity(i);
+    }
+
+    @Override
+    public void onError() {
+
     }
 }

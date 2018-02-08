@@ -1,12 +1,15 @@
 package com.example.a685559.poi;
 
-import android.app.Activity;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-public class OnDetailActivity extends Activity implements InterestPointController.PointOfInterestListener {
+public class OnDetailActivity extends AppCompatActivity implements InterestPointController.PointOfInterestListener {
 
     TextView title, address, transport, email, description;
 
@@ -32,11 +35,27 @@ public class OnDetailActivity extends Activity implements InterestPointControlle
         fetchPoi();
     }
 
-    public void fetchPoi(){
+    public void fetchPoi() {
         Bundle b = getIntent().getExtras();
         InterestPoint poi = (InterestPoint) b.get("POI");
         InterestPointController interestPointController = new InterestPointController(this);
         interestPointController.start(poi.getId());
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.detail, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_item_back) {
+            super.onBackPressed();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -49,10 +68,12 @@ public class OnDetailActivity extends Activity implements InterestPointControlle
         email = (TextView) findViewById(R.id.detailPoiEmail);
         description = (TextView) findViewById(R.id.detailPoiDescr);
 
+        title.setPaintFlags(title.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         title.setText(poi.getTitle());
         address.setText(poi.getAddress());
         transport.setText(poi.getTransport());
         email.setText(poi.getEmail());
+        //description.setJustificationMode(JUSTIFICATION_MODE_INTER_WORD);
         description.setText(poi.getDescription());
     }
 

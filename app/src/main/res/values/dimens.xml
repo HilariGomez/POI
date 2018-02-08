@@ -3,5 +3,8 @@
 
     <dimen name="poi_layout_height">65dp</dimen>
     <dimen name="margin_left_poi_row">16dp</dimen>
+    <dimen name="marginOnDetailTop">18dp</dimen>
+    <dimen name="marginOnDetailSides">18dp</dimen>
+    <dimen name="card_margin">16dp</dimen>
 
 </resources>

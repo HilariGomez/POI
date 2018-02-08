@@ -3,7 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.a685559.poi.OnDetailActivity">
+    tools:context="com.example.a685559.poi.OnDetailActivity"
+    android:background="@drawable/silueta_sagrada_familia"
+    android:backgroundTint="@color/Wheat">
 
     <RelativeLayout
         android:id="@+id/loadingPanel"
@@ -23,49 +25,113 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
-        <RelativeLayout
+        <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:fillViewport="true">
 
-            <TextView
-                android:text="title"
-                android:id="@+id/detailPoiTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-            <TextView
-                android:text="adress"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/detailPoiTitle"
-                android:layout_marginTop="20dp"
-                android:id="@+id/detailPoiAddress" />
+                <TextView
+                    android:text="title"
+                    android:id="@+id/detailPoiTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    style="@style/onDetailTitle"
+                    android:layout_marginTop="@dimen/marginOnDetailTop" />
 
-            <TextView
-                android:text="transport"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/detailPoiAddress"
-                android:layout_marginTop="20dp"
-                android:id="@+id/detailPoiTransport" />
+                <TextView
+                    android:text="Adreça"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/detailPoiTitle"
+                    android:layout_marginTop="20dp"
+                    android:id="@+id/addressSubTitle"
+                    android:layout_marginLeft="@dimen/marginOnDetailSides"
+                    style="@style/onDetailSubTitle" />
 
-            <TextView
-                android:text="email"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/detailPoiTransport"
-                android:layout_marginTop="20dp"
-                android:id="@+id/detailPoiEmail" />
+                <TextView
+                    android:text="adress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/addressSubTitle"
+                    android:id="@+id/detailPoiAddress"
+                    android:layout_marginLeft="@dimen/marginOnDetailSides"
+                    style="@style/StandardText" />
 
-            <TextView
-                android:text="description"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/detailPoiEmail"
-                android:layout_marginTop="20dp"
-                android:id="@+id/detailPoiDescr" />
 
-        </RelativeLayout>
+                <TextView
+                    android:text="Transport"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/detailPoiAddress"
+                    android:layout_marginTop="20dp"
+                    android:id="@+id/transportSubTitle"
+                    android:layout_marginLeft="@dimen/marginOnDetailSides"
+                    style="@style/onDetailSubTitle" />
+
+                <TextView
+                    android:text="transport"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/transportSubTitle"
+                    android:id="@+id/detailPoiTransport"
+                    android:layout_marginLeft="@dimen/marginOnDetailSides"
+                    style="@style/StandardText" />
+
+                <android.support.v7.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/card_margin"
+                    android:id="@+id/card"
+                    android:layout_below="@+id/detailPoiTransport">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        style="@style/Widget.CardContent">
+
+                        <TextView
+                            android:text="Descripció:"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:id="@+id/descriptionSubTitle"
+                            android:layout_marginLeft="@dimen/marginOnDetailSides"
+                            style="@style/onDetailSubTitle" />
+
+                        <TextView
+                            android:text="description"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/descriptionSubTitle"
+                            android:id="@+id/detailPoiDescr"
+                            android:layout_marginLeft="@dimen/marginOnDetailSides"
+                            android:layout_marginRight="@dimen/marginOnDetailSides"
+                            android:layout_gravity="center_vertical|right"
+                            style="@style/StandardText" />
+
+                    </LinearLayout>
+
+                </android.support.v7.widget.CardView>
+
+                <TextView
+                    android:text="email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/card"
+                    android:layout_marginTop="20dp"
+                    android:id="@+id/detailPoiEmail"
+                    android:layout_marginRight="@dimen/marginOnDetailSides"
+                    android:gravity="right"
+                    android:layout_marginBottom="20dp" />
+
+            </RelativeLayout>
+
+        </ScrollView>
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
