@@ -40,6 +40,7 @@ public class ListController implements Callback<ListResponse> {
     public void onResponse(Call<ListResponse> call, Response<ListResponse> response) {
         if (response.isSuccessful()) {
             ListResponse responseList = response.body();
+
             listener.onPointListSuccess(responseList.getList());
         } else {
             listener.onError();

@@ -25,6 +25,10 @@ public class InterestPoint implements Serializable, ClusterItem {
 
     private String phone;
 
+    public InterestPoint() {
+
+    }
+
     public InterestPoint(String id, String title, String geoCoordinates) {
         this.id = id;
         this.title = title;
@@ -96,10 +100,10 @@ public class InterestPoint implements Serializable, ClusterItem {
     }
 
     @Override
-    public LatLng getPosition(){
-        String lat= "0";
+    public LatLng getPosition() {
+        String lat = "0";
         String lng = "0";
-        boolean b=true;
+        boolean b = true;
         for (int i = 0; i < geoCoordinates.length() && b; ++i) {
             if (geoCoordinates.charAt(i) == ',') {
                 lat = geoCoordinates.substring(0, i);

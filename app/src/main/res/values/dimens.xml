@@ -6,5 +6,6 @@
     <dimen name="marginOnDetailTop">18dp</dimen>
     <dimen name="marginOnDetailSides">18dp</dimen>
     <dimen name="card_margin">16dp</dimen>
+    <dimen name="text_margin">16dp</dimen>
 
 </resources>

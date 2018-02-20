@@ -12,7 +12,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.MyViewHolder> {
 
     private ArrayList<InterestPoint> POIlist;
 
-    private ListController.PoiListListener listener;
+    //private ListController.PoiListListener listener;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView title, id, geo;
@@ -28,15 +28,15 @@ public class Adapter extends RecyclerView.Adapter<Adapter.MyViewHolder> {
                 public void onClick(View view) {
                     int index = getAdapterPosition();
                     InterestPoint selectedItem = POIlist.get(index);
-                    listener.onPointDetail(selectedItem.getId());
+                    //listener.onPointDetail(selectedItem.getId());
                 }
             });
         }
     }
 
-    public Adapter(ArrayList<InterestPoint> POIlist, ListController.PoiListListener listener) {
+    public Adapter(ArrayList<InterestPoint> POIlist/*, ListController.PoiListListener listener*/) {
         this.POIlist = POIlist;
-        this.listener = listener;
+        //this.listener = listener;
     }
 
     @Override

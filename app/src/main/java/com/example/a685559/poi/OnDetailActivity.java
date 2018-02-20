@@ -1,9 +1,6 @@
 package com.example.a685559.poi;
 
-import android.content.ActivityNotFoundException;
-import android.content.Intent;
 import android.graphics.Paint;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -35,7 +32,6 @@ public class OnDetailActivity extends AppCompatActivity implements InterestPoint
                     public void onRefresh() {
                         swipeRefreshLayout.setRefreshing(true);
                         fetchPoi();
-                        swipeRefreshLayout.setRefreshing(false);
                     }
                 }
         );
@@ -58,6 +54,7 @@ public class OnDetailActivity extends AppCompatActivity implements InterestPoint
 
     @Override
     public void onPointDetailSuccess(InterestPoint poi) {
+        swipeRefreshLayout.setRefreshing(false);
         this.poi = poi;
         findViewById(R.id.loadingPanel).setVisibility(View.GONE);
 
@@ -71,7 +68,6 @@ public class OnDetailActivity extends AppCompatActivity implements InterestPoint
 
         title.setPaintFlags(title.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         title.setText(poi.getTitle());
-        //getSupportActionBar().setTitle(poi.getTitle());
         address.setText(poi.getAddress());
 
         if (poi.getTransport().equals("null")) {
@@ -93,7 +89,6 @@ public class OnDetailActivity extends AppCompatActivity implements InterestPoint
             telephone.setText(poi.getPhone());
         }
 
-        //description.setJustificationMode(JUSTIFICATION_MODE_INTER_WORD);
         description.setText(poi.getDescription());
     }
 
@@ -101,5 +96,5 @@ public class OnDetailActivity extends AppCompatActivity implements InterestPoint
     public void onError() {
 
     }
-    
+
 }
