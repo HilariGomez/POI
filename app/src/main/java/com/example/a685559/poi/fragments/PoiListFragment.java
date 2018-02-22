@@ -1,10 +1,12 @@
-package com.example.a685559.poi;
+package com.example.a685559.poi.fragments;
 
 
 import com.example.a685559.poi.InterestPoint;
-import com.example.a685559.poi.ListController;
 import com.example.a685559.poi.R;
-import com.example.a685559.poi.Adapter;
+import com.example.a685559.poi.adapters.Adapter;
+import com.example.a685559.poi.listeners.OnPoiSelectedListener;
+import com.example.a685559.poi.listeners.PoiListListener;
+import com.example.a685559.poi.response.ListController;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -23,23 +25,21 @@ import java.util.ArrayList;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class PoiListFragment extends Fragment implements ListController.PoiListListener {
-
-    Context context;
+public class PoiListFragment extends Fragment implements PoiListListener {
 
     private RecyclerView recyclerView;
 
     private Adapter mAdapter;
 
-    private ArrayList<InterestPoint> poiList;
+    private OnPoiSelectedListener onPoiSelectedListener;
 
-    private ListController.PoiListListener listener;
+    private ArrayList<InterestPoint> poiList;
 
     public PoiListFragment() {
         // Required empty public constructor
     }
 
-    public ArrayList<InterestPoint> getPoiList(){
+    public ArrayList<InterestPoint> getPoiList() {
         return poiList;
     }
 
@@ -51,7 +51,13 @@ public class PoiListFragment extends Fragment implements ListController.PoiListL
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        this.context = context;
+
+        try {
+            onPoiSelectedListener = (OnPoiSelectedListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement Listener");
+        }
     }
 
     @Override
@@ -66,10 +72,9 @@ public class PoiListFragment extends Fragment implements ListController.PoiListL
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
 
         View myList = inflater.inflate(R.layout.fragment_poi_list, container, false);
-        recyclerView = (RecyclerView) myList.findViewById(R.id.recycler_view);
+        recyclerView = myList.findViewById(R.id.recycler_view);
         return myList;
     }
 
@@ -82,8 +87,8 @@ public class PoiListFragment extends Fragment implements ListController.PoiListL
 
     @Override
     public void onPointListSuccess(ArrayList<InterestPoint> poiList) {
-        this.poiList=poiList;
-        mAdapter = new Adapter(poiList);
+        this.poiList = poiList;
+        mAdapter = new Adapter(poiList, this);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -92,7 +97,7 @@ public class PoiListFragment extends Fragment implements ListController.PoiListL
 
     @Override
     public void onPointDetail(String id) {
-
+        onPoiSelectedListener.onPoiSelected(id);
     }
 
     @Override

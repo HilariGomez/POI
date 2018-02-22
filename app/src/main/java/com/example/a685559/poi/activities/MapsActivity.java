@@ -1,83 +1,48 @@
-package com.example.a685559.poi;
-
+package com.example.a685559.poi.activities;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 
+import com.example.a685559.poi.InterestPoint;
+import com.example.a685559.poi.OurClusterRenderer;
+import com.example.a685559.poi.listeners.PoiListListener;
+import com.example.a685559.poi.R;
+
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.support.v4.app.FragmentActivity;
 
 import java.util.ArrayList;
 
-
-/**
- * A simple {@link Fragment} subclass.
- */
-public class MapsFragment extends Fragment {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, PoiListListener {
 
     private GoogleMap mMap;
-
-    MapView mMapView;
 
     ArrayList<InterestPoint> poiList;
 
     ClusterManager clusterManager;
 
-    public MapsFragment() {
-        // Required empty public constructor
-    }
-
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Bundle bundle = this.getArguments();
-        if (bundle != null) {
-            this.poiList = (ArrayList<InterestPoint>) bundle.getSerializable("POILIST");
-        }
-    }
+        setContentView(R.layout.activity_maps);
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
-
-        View rootView = inflater.inflate(R.layout.fragment_maps, container, false);
-
-        mMapView = (MapView) rootView.findViewById(R.id.mapView);
-        mMapView.onCreate(savedInstanceState);
-        mMapView.onResume();
-
-        try {
-            MapsInitializer.initialize(getActivity().getApplicationContext());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        mMapView.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(GoogleMap googleMap) {
-                mMap = googleMap;
-                initCluster();
-                loadMapData();
-                setStartPosition();
-            }
-        });
-        return rootView;
+        Bundle b = getIntent().getExtras();
+        poiList = (ArrayList<InterestPoint>) b.get("POILIST");
     }
 
     public void initCluster() {
-        clusterManager = new ClusterManager<>(getActivity(), mMap);
-        clusterManager.setRenderer(new OurClusterRenderer(getActivity(), mMap, clusterManager));
+        clusterManager = new ClusterManager<>(getApplicationContext(), mMap);
+        clusterManager.setRenderer(new OurClusterRenderer(getApplicationContext(), mMap, clusterManager));
         mMap.setOnCameraChangeListener(clusterManager);
         mMap.setOnMarkerClickListener(clusterManager);
         mMap.setOnInfoWindowClickListener(clusterManager);
@@ -93,7 +58,7 @@ public class MapsFragment extends Fragment {
                     ++i;
                 }
                 id = title.substring(0, i);
-                //onPointDetail(id);
+                onPointDetail(id);
             }
         });
 
@@ -112,9 +77,9 @@ public class MapsFragment extends Fragment {
     public void loadMapData() {
         clusterManager.clearItems();
         for (InterestPoint poi : poiList) {
-            /*InterestPoint poi2 = poi;
-            poi2.setTitle(poi.getId() + " " + poi.getTitle());*/
-            clusterManager.addItem(poi);
+            InterestPoint poi2 = poi;
+            poi2.setTitle(poi.getId() + " " + poi.getTitle());
+            clusterManager.addItem(poi2);
         }
         clusterManager.cluster();
     }
@@ -125,4 +90,28 @@ public class MapsFragment extends Fragment {
         mMap.setMinZoomPreference(12);
     }
 
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+        initCluster();
+        loadMapData();
+        setStartPosition();
+    }
+
+    @Override
+    public void onPointListSuccess(ArrayList<InterestPoint> poiList) {
+
+    }
+
+    @Override
+    public void onPointDetail(String id) {
+        Intent i = new Intent(this, OnDetailActivity.class);
+        i.putExtra("ID", id);
+        startActivity(i);
+    }
+
+    @Override
+    public void onError() {
+
+    }
 }

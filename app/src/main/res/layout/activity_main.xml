@@ -3,42 +3,34 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.a685559.poi.MainActivity"
+    tools:context="com.example.a685559.poi.activities.MainActivity"
     android:background="@color/White">
 
-    <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/swipeRefresh"
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <RelativeLayout
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/mainTitle"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="14dp"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginTop="4dp"
+            android:textColor="@color/Black" />
+
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_below="@+id/textView"
+            android:id="@+id/frameLayout">
 
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/mainTitle"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="14dp"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:layout_marginTop="4dp"
-                android:textColor="@color/Black" />
+        </FrameLayout>
 
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@+id/textView"
-                android:id="@+id/frameLayout">
-
-            </FrameLayout>
-
-
-        </RelativeLayout>
-
-    </android.support.v4.widget.SwipeRefreshLayout>
-
+    </RelativeLayout>
 
 </RelativeLayout>

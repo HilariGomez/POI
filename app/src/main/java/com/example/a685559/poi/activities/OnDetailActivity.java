@@ -1,4 +1,9 @@
-package com.example.a685559.poi;
+package com.example.a685559.poi.activities;
+
+import com.example.a685559.poi.InterestPoint;
+import com.example.a685559.poi.response.InterestPointController;
+import com.example.a685559.poi.listeners.PointOfInterestListener;
+import com.example.a685559.poi.R;
 
 import android.graphics.Paint;
 import android.os.Bundle;
@@ -7,7 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 
-public class OnDetailActivity extends AppCompatActivity implements InterestPointController.PointOfInterestListener {
+public class OnDetailActivity extends AppCompatActivity implements PointOfInterestListener {
 
     TextView title, address, transport, email, telephone, description;
 
@@ -25,7 +30,7 @@ public class OnDetailActivity extends AppCompatActivity implements InterestPoint
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefresh);
+        swipeRefreshLayout = findViewById(R.id.swipeRefresh);
         swipeRefreshLayout.setOnRefreshListener(
                 new SwipeRefreshLayout.OnRefreshListener() {
                     @Override

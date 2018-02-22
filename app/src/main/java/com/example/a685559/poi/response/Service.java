@@ -1,4 +1,6 @@
-package com.example.a685559.poi;
+package com.example.a685559.poi.response;
+
+import com.example.a685559.poi.InterestPoint;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

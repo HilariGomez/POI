@@ -23,6 +23,7 @@ public class OurClusterRenderer extends DefaultClusterRenderer<InterestPoint> {
     @Override
     protected void onBeforeClusterItemRendered(InterestPoint poi, MarkerOptions markerOptions) {
         markerOptions.title(poi.getTitle());
+        markerOptions.snippet(poi.getId());
     }
 
     @Override

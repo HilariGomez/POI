@@ -1,6 +1,8 @@
-package com.example.a685559.poi;
+package com.example.a685559.poi.response;
 
 import com.google.gson.annotations.SerializedName;
+
+import com.example.a685559.poi.InterestPoint;
 
 import java.util.ArrayList;
 

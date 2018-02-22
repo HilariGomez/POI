@@ -1,4 +1,8 @@
-package com.example.a685559.poi;
+package com.example.a685559.poi.adapters;
+
+import com.example.a685559.poi.InterestPoint;
+import com.example.a685559.poi.R;
+import com.example.a685559.poi.listeners.PoiListListener;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,31 +16,31 @@ public class Adapter extends RecyclerView.Adapter<Adapter.MyViewHolder> {
 
     private ArrayList<InterestPoint> POIlist;
 
-    //private ListController.PoiListListener listener;
+    private PoiListListener listener;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView title, id, geo;
 
         public MyViewHolder(View view) {
             super(view);
-            title = (TextView) view.findViewById(R.id.poi_title);
-            id = (TextView) view.findViewById(R.id.poi_id);
-            geo = (TextView) view.findViewById(R.id.poi_geo);
+            title = view.findViewById(R.id.poi_title);
+            id = view.findViewById(R.id.poi_id);
+            geo = view.findViewById(R.id.poi_geo);
 
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     int index = getAdapterPosition();
                     InterestPoint selectedItem = POIlist.get(index);
-                    //listener.onPointDetail(selectedItem.getId());
+                    listener.onPointDetail(selectedItem.getId());
                 }
             });
         }
     }
 
-    public Adapter(ArrayList<InterestPoint> POIlist/*, ListController.PoiListListener listener*/) {
+    public Adapter(ArrayList<InterestPoint> POIlist, PoiListListener listener) {
         this.POIlist = POIlist;
-        //this.listener = listener;
+        this.listener = listener;
     }
 
     @Override
