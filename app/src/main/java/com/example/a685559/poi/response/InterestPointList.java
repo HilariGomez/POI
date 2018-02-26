@@ -4,9 +4,10 @@ import com.google.gson.annotations.SerializedName;
 
 import com.example.a685559.poi.InterestPoint;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class ListResponse {
+public class InterestPointList implements Serializable {
 
     @SerializedName("list")
     private ArrayList<InterestPoint> list = null;

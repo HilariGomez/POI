@@ -11,7 +11,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class ListController implements Callback<ListResponse> {
+public class ListController implements Callback<InterestPointList> {
 
     private static final String BASE_URL = "https://t21services.herokuapp.com/";
 
@@ -32,14 +32,14 @@ public class ListController implements Callback<ListResponse> {
                 .build();
 
         Service service = retrofit.create(Service.class);
-        Call<ListResponse> call = service.getPointsOfInterest();
+        Call<InterestPointList> call = service.getPointsOfInterest();
         call.enqueue(this);
     }
 
     @Override
-    public void onResponse(Call<ListResponse> call, Response<ListResponse> response) {
+    public void onResponse(Call<InterestPointList> call, Response<InterestPointList> response) {
         if (response.isSuccessful()) {
-            ListResponse responseList = response.body();
+            InterestPointList responseList = response.body();
 
             listener.onPointListSuccess(responseList.getList());
         } else {
@@ -49,7 +49,7 @@ public class ListController implements Callback<ListResponse> {
     }
 
     @Override
-    public void onFailure(Call<ListResponse> call, Throwable t) {
+    public void onFailure(Call<InterestPointList> call, Throwable t) {
         listener.onError();
         t.printStackTrace();
     }

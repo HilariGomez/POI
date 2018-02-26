@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +22,8 @@ import android.widget.TextView;
  * A simple {@link Fragment} subclass.
  */
 public class OnDetailFragment extends Fragment implements PointOfInterestListener {
+
+    InterestPoint poi;
 
     TextView title, address, transport, email, telephone, description;
 
@@ -75,7 +76,6 @@ public class OnDetailFragment extends Fragment implements PointOfInterestListene
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         super.onActivityCreated(savedInstanceState);
         swipeRefreshLayout.setOnRefreshListener(
                 new SwipeRefreshLayout.OnRefreshListener() {
@@ -86,16 +86,29 @@ public class OnDetailFragment extends Fragment implements PointOfInterestListene
                     }
                 }
         );
-        fetchPoi();
+        if (savedInstanceState != null) {
+            this.poi = (InterestPoint) savedInstanceState.getSerializable("POI");
+            setOnDetailView();
+        }
+        else {
+            fetchPoi();
+        }
     }
 
     @Override
-    public void onPointDetailSuccess(InterestPoint poi) {
-        swipeRefreshLayout.setRefreshing(false);
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (poi != null) {
+            outState.putSerializable("POI", poi);
+        }
+    }
+
+    public void setOnDetailView() {
         loadingPanel.setVisibility(View.GONE);
 
         title.setPaintFlags(title.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         title.setText(poi.getTitle());
+
         address.setText(poi.getAddress());
 
         if (poi.getTransport().equals("null")) {
@@ -118,6 +131,13 @@ public class OnDetailFragment extends Fragment implements PointOfInterestListene
         }
 
         description.setText(poi.getDescription());
+    }
+
+    @Override
+    public void onPointDetailSuccess(InterestPoint poi) {
+        swipeRefreshLayout.setRefreshing(false);
+        this.poi = poi;
+        setOnDetailView();
     }
 
     @Override
