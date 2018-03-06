@@ -21,7 +21,7 @@
                 android:layout_height="match_parent">
 
                 <TextView
-                    android:text="title"
+                    tools:text="title"
                     android:id="@+id/detailPoiTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -30,7 +30,7 @@
                     android:layout_marginTop="@dimen/marginOnDetailTop" />
 
                 <TextView
-                    android:text="Adreça"
+                    tools:text="Adreça"
                     android:id="@+id/addressSubTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -40,7 +40,7 @@
                     style="@style/onDetailSubTitle" />
 
                 <TextView
-                    android:text="adress"
+                    tools:text="adress"
                     android:id="@+id/detailPoiAddress"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -50,7 +50,7 @@
 
 
                 <TextView
-                    android:text="Transport"
+                    tools:text="Transport"
                     android:id="@+id/transportSubTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -60,7 +60,7 @@
                     style="@style/onDetailSubTitle" />
 
                 <TextView
-                    android:text="transport"
+                    tools:text="transport"
                     android:id="@+id/detailPoiTransport"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -81,7 +81,7 @@
                         style="@style/Widget.CardContent">
 
                         <TextView
-                            android:text="Descripció:"
+                            tools:text="Descripció:"
                             android:id="@+id/descriptionSubTitle"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -90,7 +90,7 @@
                             style="@style/onDetailSubTitle" />
 
                         <TextView
-                            android:text="description"
+                            tools:text="description"
                             android:id="@+id/detailPoiDescr"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -105,7 +105,7 @@
                 </android.support.v7.widget.CardView>
 
                 <TextView
-                    android:text="email"
+                    tools:text="email"
                     android:id="@+id/detailPoiEmail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -118,7 +118,7 @@
                     android:textColorLink="@color/DarkBlue"/>
 
                 <TextView
-                    android:text="telephone"
+                    tools:text="telephone"
                     android:id="@+id/detailPoiTelephone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

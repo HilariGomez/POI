@@ -42,12 +42,18 @@ public class PoiListFragment extends Fragment implements PoiListListener {
 
     RelativeLayout loadingPanel;
 
+    String poiSelectedId = "none";
+
     public PoiListFragment() {
         // Required empty public constructor
     }
 
     public ArrayList<InterestPoint> getPoiList() {
         return poiList;
+    }
+
+    public String getPoiSelectedId() {
+        return poiSelectedId;
     }
 
     public void fetchList() {
@@ -81,9 +87,16 @@ public class PoiListFragment extends Fragment implements PoiListListener {
             Bundle savedInstanceState) {
 
         View poiListView = inflater.inflate(R.layout.fragment_poi_list, container, false);
-        recyclerView = poiListView.findViewById(R.id.recycler_view);
         swipeRefreshLayout = poiListView.findViewById(R.id.swipeRefresh);
         loadingPanel = poiListView.findViewById(R.id.loadingPanel);
+
+        recyclerView = poiListView.findViewById(R.id.recycler_view);
+        mAdapter = new Adapter(this);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(mAdapter);
+
         return poiListView;
     }
 
@@ -101,7 +114,11 @@ public class PoiListFragment extends Fragment implements PoiListListener {
         );
         if (savedInstanceState != null) {
             InterestPointList pointListRecovered = (InterestPointList) savedInstanceState.getSerializable("POILIST");
-            inflateList(pointListRecovered.getList());
+            if (pointListRecovered != null) {
+                inflateList(pointListRecovered.getList());
+            } else {
+                fetchList();
+            }
         } else {
             fetchList();
         }
@@ -124,11 +141,7 @@ public class PoiListFragment extends Fragment implements PoiListListener {
     public void inflateList(ArrayList<InterestPoint> poiList) {
         loadingPanel.setVisibility(View.GONE);
         this.poiList = poiList;
-        mAdapter = new Adapter(poiList, this);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
-        recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(mAdapter);
+        mAdapter.addItems(poiList);
     }
 
     @Override
@@ -139,6 +152,7 @@ public class PoiListFragment extends Fragment implements PoiListListener {
 
     @Override
     public void onPointDetail(String id) {
+        poiSelectedId = id;
         onPoiSelectedListener.onPoiSelected(id);
     }
 

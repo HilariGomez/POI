@@ -28,6 +28,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     ClusterManager clusterManager;
 
+    String startingPoiId = "none";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +40,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         Bundle b = getIntent().getExtras();
         poiList = (ArrayList<InterestPoint>) b.get("POILIST");
+        startingPoiId = b.getString("SELECTEDPOI");
     }
 
     public void initCluster() {
@@ -85,9 +88,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     public void setStartPosition() {
-        LatLng iniPos = new LatLng(41.391926, 2.165208);
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(iniPos));
         mMap.setMinZoomPreference(12);
+        if(startingPoiId.equals("none")) {
+            LatLng iniPos = new LatLng(41.391926, 2.165208);
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(iniPos));
+
+        } else {
+            InterestPoint startingPoi = poiList.get(Integer.valueOf(startingPoiId));
+            LatLng startingPoiPos = startingPoi.getPosition();
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(startingPoiPos));
+            CameraUpdateFactory.zoomTo(11);
+        }
     }
 
     @Override

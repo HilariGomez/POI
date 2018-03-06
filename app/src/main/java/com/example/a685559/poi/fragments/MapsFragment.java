@@ -47,6 +47,8 @@ public class MapsFragment extends Fragment {
 
     ClusterManager clusterManager;
 
+    String startingPoiId = "none";
+
     public MapsFragment() {
         // Required empty public constructor
     }
@@ -70,6 +72,7 @@ public class MapsFragment extends Fragment {
         Bundle bundle = this.getArguments();
         if (bundle != null) {
             this.poiList = (ArrayList<InterestPoint>) bundle.getSerializable("POILIST");
+            startingPoiId = bundle.getString("SELECTEDPOI");
         }
     }
 
@@ -161,9 +164,17 @@ public class MapsFragment extends Fragment {
     }
 
     public void setStartPosition() {
-        LatLng iniPos = new LatLng(41.391926, 2.165208);
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(iniPos));
         mMap.setMinZoomPreference(12);
+        if(startingPoiId.equals("none")) {
+            LatLng iniPos = new LatLng(41.391926, 2.165208);
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(iniPos));
+
+        } else {
+            InterestPoint startingPoi = poiList.get(Integer.valueOf(startingPoiId)-1);
+            LatLng startingPoiPos = startingPoi.getPosition();
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(startingPoiPos));
+            CameraUpdateFactory.zoomTo(11);
+        }
     }
 
 }

@@ -6,31 +6,29 @@
     tools:context="com.example.a685559.poi.activities.MainActivity"
     android:background="@color/White">
 
-
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/mainTitle"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="14dp"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:layout_marginTop="4dp"
-            android:textColor="@color/Black" />
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:baselineAligned="false">
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/textView"
-            android:id="@+id/frameLayout">
+            android:id="@+id/frameLayoutListMap"
+            android:layout_weight="1">
 
         </FrameLayout>
 
-    </RelativeLayout>
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/frameLayoutDetail"
+            android:background="@color/BlanchedAlmond"
+            android:layout_weight="1">
+
+        </FrameLayout>
+
+    </LinearLayout>
 
 </RelativeLayout>

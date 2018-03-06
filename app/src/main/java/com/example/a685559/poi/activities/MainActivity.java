@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements OnPoiSelectedList
 
         if (savedInstanceState == null) {
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.frameLayout, poiListFragment, "listTag");
+            fragmentTransaction.replace(R.id.frameLayoutListMap, poiListFragment, "listTag");
             fragmentTransaction.commit();
         } else {
             poiListFragment = (PoiListFragment) getSupportFragmentManager().findFragmentByTag("listTag");
@@ -66,11 +66,12 @@ public class MainActivity extends AppCompatActivity implements OnPoiSelectedList
                 isListFragmentActive = false;
 
                 poiListArgs.putSerializable("POILIST", poiListFragment.getPoiList());
+                poiListArgs.putString("SELECTEDPOI", poiListFragment.getPoiSelectedId());
                 MapsFragment mapFragment = new MapsFragment();
                 mapFragment.setArguments(poiListArgs);
 
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.frameLayout, mapFragment);
+                fragmentTransaction.replace(R.id.frameLayoutListMap, mapFragment);
                 fragmentTransaction.commit();
 
                 menuState = State.MAP;
@@ -81,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements OnPoiSelectedList
 
             poiListFragment = new PoiListFragment();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.frameLayout, poiListFragment, "listTag");
+            fragmentTransaction.replace(R.id.frameLayoutListMap, poiListFragment, "listTag");
             fragmentTransaction.commit();
 
             menuState = State.LIST;
@@ -98,14 +99,14 @@ public class MainActivity extends AppCompatActivity implements OnPoiSelectedList
         Bundle poiBundle = new Bundle();
         poiBundle.putSerializable("ID", id);
 
-        menuState = State.DETAIL;
-        updateMenu(menuState);
+        /*menuState = State.DETAIL;
+        updateMenu(menuState);*/
 
         OnDetailFragment onDetailFragment = new OnDetailFragment();
         onDetailFragment.setArguments(poiBundle);
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.frameLayout, onDetailFragment).addToBackStack(null);
-        fragmentTransaction.commit();
+        fragmentTransaction.replace(R.id.frameLayoutDetail, onDetailFragment);
+        fragmentTransaction.commitAllowingStateLoss();
     }
 
     @Override
@@ -135,9 +136,9 @@ public class MainActivity extends AppCompatActivity implements OnPoiSelectedList
             menuState = State.LIST;
         } else if (savedState.equals("MAP")) {
             menuState = State.MAP;
-        } else if (savedState.equals("DETAIL")) {
+        } /*else if (savedState.equals("DETAIL")) {
             menuState = State.DETAIL;
-        }
+        }*/
     }
 
     @Override
@@ -150,9 +151,9 @@ public class MainActivity extends AppCompatActivity implements OnPoiSelectedList
 
     public void updateMenu(State state) {
         if (state == State.DETAIL) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            /*getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             menu.findItem(R.id.action_item_map).setVisible(false);
-            menu.findItem(R.id.action_item_list).setVisible(false);
+            menu.findItem(R.id.action_item_list).setVisible(false);*/
 
         } else if (state == State.LIST) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);

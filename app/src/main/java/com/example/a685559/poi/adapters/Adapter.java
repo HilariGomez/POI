@@ -11,12 +11,15 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Adapter extends RecyclerView.Adapter<Adapter.MyViewHolder> {
 
-    private ArrayList<InterestPoint> POIlist;
+    private ArrayList<InterestPoint> poiList;
 
     private PoiListListener listener;
+
+    int selectedPosition = 0;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView title, id, geo;
@@ -31,15 +34,16 @@ public class Adapter extends RecyclerView.Adapter<Adapter.MyViewHolder> {
                 @Override
                 public void onClick(View view) {
                     int index = getAdapterPosition();
-                    InterestPoint selectedItem = POIlist.get(index);
+                    InterestPoint selectedItem = poiList.get(index);
                     listener.onPointDetail(selectedItem.getId());
+                    selectedPosition = index;
+                    notifyDataSetChanged();
                 }
             });
         }
     }
 
-    public Adapter(ArrayList<InterestPoint> POIlist, PoiListListener listener) {
-        this.POIlist = POIlist;
+    public Adapter(PoiListListener listener) {
         this.listener = listener;
     }
 
@@ -53,7 +57,12 @@ public class Adapter extends RecyclerView.Adapter<Adapter.MyViewHolder> {
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        InterestPoint poi = POIlist.get(position);
+        if (selectedPosition == position) {
+            holder.itemView.setSelected(true);
+        } else {
+            holder.itemView.setSelected(false);
+        }
+        InterestPoint poi = poiList.get(position);
         holder.title.setText(poi.getTitle());
         holder.id.setText(poi.getId());
         holder.geo.setText(poi.getGeoCoordinates());
@@ -61,7 +70,16 @@ public class Adapter extends RecyclerView.Adapter<Adapter.MyViewHolder> {
 
     @Override
     public int getItemCount() {
-        return POIlist != null ? POIlist.size() : 0;
+        return poiList != null ? poiList.size() : 0;
     }
 
+    public void addItems(List<InterestPoint> items) {
+        if (poiList == null || poiList.isEmpty()) {
+            poiList = new ArrayList<>(items);
+        } else {
+            poiList.clear();
+            poiList.addAll(items);
+        }
+        notifyDataSetChanged();
+    }
 }
