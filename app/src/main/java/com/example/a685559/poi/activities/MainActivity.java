@@ -1,6 +1,5 @@
 package com.example.a685559.poi.activities;
 
-import com.example.a685559.poi.InterestPoint;
 import com.example.a685559.poi.R;
 import com.example.a685559.poi.fragments.MapsFragment;
 import com.example.a685559.poi.fragments.OnDetailFragment;
@@ -14,23 +13,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import java.util.ArrayList;
-
 public class MainActivity extends AppCompatActivity implements OnPoiSelectedListener {
 
     private Menu menu;
 
-    Bundle poiListArgs = new Bundle();
-
-    boolean isListFragmentActive = true;
-
     FragmentManager fragmentManager = getSupportFragmentManager();
 
-    PoiListFragment poiListFragment = new PoiListFragment();
+    PoiListFragment poiListFragment;
 
-    ArrayList<InterestPoint> poiList;
+    MapsFragment mapsFragment;
 
-    State menuState = State.LIST;
+    State currentState = State.LIST;
 
     public enum State {
         LIST, MAP, DETAIL
@@ -40,8 +33,8 @@ public class MainActivity extends AppCompatActivity implements OnPoiSelectedList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         if (savedInstanceState == null) {
+            poiListFragment = new PoiListFragment();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.replace(R.id.frameLayoutListMap, poiListFragment, "listTag");
             fragmentTransaction.commit();
@@ -54,40 +47,24 @@ public class MainActivity extends AppCompatActivity implements OnPoiSelectedList
     public boolean onCreateOptionsMenu(Menu menu) {
         this.menu = menu;
         getMenuInflater().inflate(R.menu.main, menu);
-        updateMenu(menuState);
+        updateMenu(currentState);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_item_map) {
-            if (poiListFragment.getPoiList() != null) {
-                isListFragmentActive = false;
-
-                poiListArgs.putSerializable("POILIST", poiListFragment.getPoiList());
-                poiListArgs.putString("SELECTEDPOI", poiListFragment.getPoiSelectedId());
-                MapsFragment mapFragment = new MapsFragment();
-                mapFragment.setArguments(poiListArgs);
-
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.frameLayoutListMap, mapFragment);
-                fragmentTransaction.commit();
-
-                menuState = State.MAP;
-                updateMenu(menuState);
-            }
+        if (id == R.id.action_item_map && poiListFragment.getPoiList() != null) {
+            currentState = State.MAP;
+            initFragment(currentState);
+            launchFragment(currentState);
+            updateMenu(currentState);
         } else if (id == R.id.action_item_list) {
-            isListFragmentActive = true;
-
-            poiListFragment = new PoiListFragment();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.frameLayoutListMap, poiListFragment, "listTag");
-            fragmentTransaction.commit();
-
-            menuState = State.LIST;
-            updateMenu(menuState);
-        } else if (id==android.R.id.home) {
+            currentState = State.LIST;
+            initFragment(currentState);
+            launchFragment(currentState);
+            updateMenu(currentState);
+        } else if (id == android.R.id.home) {
             onBackPressed();
             return true;
         }
@@ -99,24 +76,19 @@ public class MainActivity extends AppCompatActivity implements OnPoiSelectedList
         Bundle poiBundle = new Bundle();
         poiBundle.putSerializable("ID", id);
 
-        /*menuState = State.DETAIL;
-        updateMenu(menuState);*/
+        /*currentState = State.DETAIL;
+        updateMenu(currentState);*/
 
         OnDetailFragment onDetailFragment = new OnDetailFragment();
         onDetailFragment.setArguments(poiBundle);
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frameLayoutDetail, onDetailFragment);
-        fragmentTransaction.commitAllowingStateLoss();
+        fragmentTransaction.commit();
     }
 
     @Override
     public void onBackPressed() {
-        if (isListFragmentActive) {
-            menuState = State.LIST;
-        } else {
-            menuState = State.MAP;
-        }
-        updateMenu(menuState);
+        updateMenu(currentState);
         if (fragmentManager.getBackStackEntryCount() > 0) {
             fragmentManager.popBackStack();
         } else {
@@ -127,26 +99,49 @@ public class MainActivity extends AppCompatActivity implements OnPoiSelectedList
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
-        savedInstanceState.putBoolean("listActive", isListFragmentActive);
-        savedInstanceState.putString("menuState", menuState.toString());
+        savedInstanceState.putString("currentState", currentState.toString());
     }
 
-    public void recoverState(String savedState){
-        if(savedState.equals("LIST")){
-            menuState = State.LIST;
+    public void recoverState(String savedState) {
+        if (savedState.equals("LIST")) {
+            currentState = State.LIST;
         } else if (savedState.equals("MAP")) {
-            menuState = State.MAP;
+            currentState = State.MAP;
         } /*else if (savedState.equals("DETAIL")) {
-            menuState = State.DETAIL;
+            currentState = State.DETAIL;
         }*/
     }
 
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        isListFragmentActive = savedInstanceState.getBoolean("listActive");
-        String savedState = savedInstanceState.getString("menuState");
+        String savedState = savedInstanceState.getString("currentState");
         recoverState(savedState);
+    }
+
+    public void initFragment(State state) {
+        Bundle fragmentArgs = new Bundle();
+        if (state == State.MAP) {
+            mapsFragment = new MapsFragment();
+            fragmentArgs.putSerializable("POILIST", poiListFragment.getPoiList());
+            fragmentArgs.putString("SELECTEDPOI", poiListFragment.getPoiSelectedId());
+            mapsFragment.setArguments(fragmentArgs);
+        } else if (state == State.LIST) {
+            poiListFragment = new PoiListFragment();
+            fragmentArgs.putSerializable("POILIST", mapsFragment.getPoiList());
+            fragmentArgs.putString("SELECTEDPOI", mapsFragment.getPoiSelectedId());
+            poiListFragment.setArguments(fragmentArgs);
+        }
+    }
+
+    public void launchFragment(State state) {
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        if (state == State.MAP) {
+            fragmentTransaction.replace(R.id.frameLayoutListMap, mapsFragment);
+        } else if (state == State.LIST) {
+            fragmentTransaction.replace(R.id.frameLayoutListMap, poiListFragment, "listTag");
+        }
+        fragmentTransaction.commit();
     }
 
     public void updateMenu(State state) {

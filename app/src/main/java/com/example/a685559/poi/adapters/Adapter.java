@@ -43,8 +43,9 @@ public class Adapter extends RecyclerView.Adapter<Adapter.MyViewHolder> {
         }
     }
 
-    public Adapter(PoiListListener listener) {
+    public Adapter(PoiListListener listener, String poiSelectedId) {
         this.listener = listener;
+        selectedPosition = Integer.valueOf(poiSelectedId)-1;
     }
 
     @Override

@@ -24,10 +24,6 @@ import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
 
-
-/**
- * A simple {@link Fragment} subclass.
- */
 public class PoiListFragment extends Fragment implements PoiListListener {
 
     private RecyclerView recyclerView;
@@ -42,7 +38,7 @@ public class PoiListFragment extends Fragment implements PoiListListener {
 
     RelativeLayout loadingPanel;
 
-    String poiSelectedId = "none";
+    String poiSelectedId = "1";
 
     public PoiListFragment() {
         // Required empty public constructor
@@ -79,6 +75,7 @@ public class PoiListFragment extends Fragment implements PoiListListener {
         Bundle bundle = this.getArguments();
         if (bundle != null) {
             this.poiList = (ArrayList<InterestPoint>) bundle.getSerializable("POILIST");
+            poiSelectedId = bundle.getString("SELECTEDPOI");
         }
     }
 
@@ -91,7 +88,7 @@ public class PoiListFragment extends Fragment implements PoiListListener {
         loadingPanel = poiListView.findViewById(R.id.loadingPanel);
 
         recyclerView = poiListView.findViewById(R.id.recycler_view);
-        mAdapter = new Adapter(this);
+        mAdapter = new Adapter(this, poiSelectedId);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -112,7 +109,9 @@ public class PoiListFragment extends Fragment implements PoiListListener {
                     }
                 }
         );
-        if (savedInstanceState != null) {
+        if (poiList != null && poiList.size() > 0) {
+            inflateList(poiList);
+        } else if (savedInstanceState != null) {
             InterestPointList pointListRecovered = (InterestPointList) savedInstanceState.getSerializable("POILIST");
             if (pointListRecovered != null) {
                 inflateList(pointListRecovered.getList());
