@@ -2,6 +2,8 @@
 <resources>
 
     <dimen name="poi_layout_height">65dp</dimen>
+    <dimen name="poi_row_img_height">60dp</dimen>
+    <dimen name="poi_row_img_width">200dp</dimen>
     <dimen name="margin_left_poi_row">16dp</dimen>
     <dimen name="marginOnDetailTop">18dp</dimen>
     <dimen name="marginOnDetailSides">18dp</dimen>

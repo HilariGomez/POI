@@ -93,6 +93,9 @@ public class PoiListFragment extends Fragment implements PoiListListener {
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(mAdapter);
+        if(!poiSelectedId.equals("none")) {
+            recyclerView.scrollToPosition(Integer.valueOf(poiSelectedId)-1);
+        }
 
         return poiListView;
     }
