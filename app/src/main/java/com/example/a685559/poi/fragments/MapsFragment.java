@@ -15,6 +15,7 @@ import com.example.a685559.poi.InterestPoint;
 import com.example.a685559.poi.OurClusterRenderer;
 import com.example.a685559.poi.R;
 import com.example.a685559.poi.listeners.OnPoiSelectedListener;
+import com.example.a685559.poi.response.InterestPointList;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -112,6 +113,17 @@ public class MapsFragment extends Fragment {
         return rootView;
     }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (savedInstanceState != null) {
+            InterestPointList pointListRecovered = (InterestPointList) savedInstanceState.getSerializable("POILIST");
+            if (pointListRecovered != null) {
+                this.poiList = pointListRecovered.getList();
+            }
+        }
+    }
+
     public void initCluster() {
         clusterManager = new ClusterManager<>(getActivity(), mMap);
         clusterManager.setRenderer(new OurClusterRenderer(getActivity(), mMap, clusterManager));
@@ -183,6 +195,20 @@ public class MapsFragment extends Fragment {
             LatLng startingPoiPos = startingPoi.getPosition();
             mMap.moveCamera(CameraUpdateFactory.newLatLng(startingPoiPos));
             CameraUpdateFactory.zoomTo(11);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle instanceStateToSave) {
+        super.onSaveInstanceState(instanceStateToSave);
+        savePoiList(instanceStateToSave);
+    }
+
+    public void savePoiList(Bundle instanceStateToSave) {
+        if (poiList != null) {
+            InterestPointList interestPointList = new InterestPointList();
+            interestPointList.setList(poiList);
+            instanceStateToSave.putSerializable("POILIST", interestPointList);
         }
     }
 

@@ -6,12 +6,16 @@ import com.example.a685559.poi.fragments.OnDetailFragment;
 import com.example.a685559.poi.fragments.PoiListFragment;
 import com.example.a685559.poi.listeners.OnPoiSelectedListener;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements OnPoiSelectedListener {
 
@@ -34,12 +38,8 @@ public class MainActivity extends AppCompatActivity implements OnPoiSelectedList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         if (savedInstanceState == null) {
-            poiListFragment = new PoiListFragment();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.frameLayoutListMap, poiListFragment, "listTag");
-            fragmentTransaction.commit();
-        } else {
-            poiListFragment = (PoiListFragment) getSupportFragmentManager().findFragmentByTag("listTag");
+            initFragment(currentState);
+            launchFragment(currentState);
         }
     }
 
@@ -66,7 +66,6 @@ public class MainActivity extends AppCompatActivity implements OnPoiSelectedList
             updateMenu(currentState);
         } else if (id == android.R.id.home) {
             onBackPressed();
-            return true;
         }
         return true;
     }
@@ -76,23 +75,39 @@ public class MainActivity extends AppCompatActivity implements OnPoiSelectedList
         Bundle poiBundle = new Bundle();
         poiBundle.putSerializable("ID", id);
 
-        /*currentState = State.DETAIL;
-        updateMenu(currentState);*/
-
         OnDetailFragment onDetailFragment = new OnDetailFragment();
         onDetailFragment.setArguments(poiBundle);
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.frameLayoutDetail, onDetailFragment);
+        if (isOrientationPortrait()) {
+            fragmentTransaction.add(R.id.frameLayoutListMap, onDetailFragment);
+            fragmentTransaction.addToBackStack(null);
+            currentState = State.DETAIL;
+            updateMenu(currentState);
+        } else {
+            fragmentTransaction.replace(R.id.frameLayoutDetail, onDetailFragment);
+        }
+
         fragmentTransaction.commit();
     }
 
     @Override
     public void onBackPressed() {
+        goToPreviousState();
         updateMenu(currentState);
+    }
+
+    public void goToPreviousState() {
         if (fragmentManager.getBackStackEntryCount() > 0) {
             fragmentManager.popBackStack();
         } else {
             super.onBackPressed();
+        }
+        List<Fragment> activeFragments = fragmentManager.getFragments();
+        Fragment currentFragment = activeFragments.get(0);
+        if (currentFragment instanceof PoiListFragment) {
+            currentState = State.LIST;
+        } else if (currentFragment instanceof MapsFragment) {
+            currentState = State.MAP;
         }
     }
 
@@ -107,16 +122,29 @@ public class MainActivity extends AppCompatActivity implements OnPoiSelectedList
             currentState = State.LIST;
         } else if (savedState.equals("MAP")) {
             currentState = State.MAP;
-        } /*else if (savedState.equals("DETAIL")) {
-            currentState = State.DETAIL;
-        }*/
+        } else if (savedState.equals("DETAIL")) {
+            if (isOrientationPortrait()) {
+                currentState = State.DETAIL;
+            } else {
+                goToPreviousState();
+            }
+        }
+    }
+
+    public void recoverFragments() {
+        if (currentState == State.LIST) {
+            poiListFragment = (PoiListFragment) getSupportFragmentManager().findFragmentByTag("list");
+        } else if (currentState == State.MAP) {
+            mapsFragment = (MapsFragment) getSupportFragmentManager().findFragmentByTag("map");
+        }
+
     }
 
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        String savedState = savedInstanceState.getString("currentState");
-        recoverState(savedState);
+        recoverState(savedInstanceState.getString("currentState"));
+        recoverFragments();
     }
 
     public void initFragment(State state) {
@@ -128,27 +156,29 @@ public class MainActivity extends AppCompatActivity implements OnPoiSelectedList
             mapsFragment.setArguments(fragmentArgs);
         } else if (state == State.LIST) {
             poiListFragment = new PoiListFragment();
-            fragmentArgs.putSerializable("POILIST", mapsFragment.getPoiList());
-            fragmentArgs.putString("SELECTEDPOI", mapsFragment.getPoiSelectedId());
-            poiListFragment.setArguments(fragmentArgs);
+            if (mapsFragment != null) {
+                fragmentArgs.putSerializable("POILIST", mapsFragment.getPoiList());
+                fragmentArgs.putString("SELECTEDPOI", mapsFragment.getPoiSelectedId());
+                poiListFragment.setArguments(fragmentArgs);
+            }
         }
     }
 
     public void launchFragment(State state) {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         if (state == State.MAP) {
-            fragmentTransaction.replace(R.id.frameLayoutListMap, mapsFragment);
+            fragmentTransaction.replace(R.id.frameLayoutListMap, mapsFragment, "map");
         } else if (state == State.LIST) {
-            fragmentTransaction.replace(R.id.frameLayoutListMap, poiListFragment, "listTag");
+            fragmentTransaction.replace(R.id.frameLayoutListMap, poiListFragment, "list");
         }
         fragmentTransaction.commit();
     }
 
     public void updateMenu(State state) {
         if (state == State.DETAIL) {
-            /*getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             menu.findItem(R.id.action_item_map).setVisible(false);
-            menu.findItem(R.id.action_item_list).setVisible(false);*/
+            menu.findItem(R.id.action_item_list).setVisible(false);
 
         } else if (state == State.LIST) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
@@ -161,5 +191,11 @@ public class MainActivity extends AppCompatActivity implements OnPoiSelectedList
             menu.findItem(R.id.action_item_list).setVisible(true);
         }
     }
-}
 
+    public boolean isOrientationPortrait() {
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            return true;
+        }
+        return false;
+    }
+}

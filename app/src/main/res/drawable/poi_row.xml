@@ -3,18 +3,16 @@
 
     <item android:state_selected="false">
         <shape>
-            <gradient
-                android:startColor="@color/PeachPuff"
-                android:endColor="@color/Wheat"
-                android:angle="270">
-            </gradient>
+            <solid android:color="@color/MintCream">
+
+            </solid>
             <stroke android:color="@color/Black"
                 android:width="1dp"/>
         </shape>
 
     </item>
 
-    <item android:state_pressed="false" android:state_selected="true">
+    <item android:state_pressed="false" android:state_selected="true" >
         <shape>
             <gradient
                 android:startColor="@color/OrangeRed"
@@ -25,6 +23,5 @@
                 android:width="1dp"/>
         </shape>
     </item>
-
 
 </selector>

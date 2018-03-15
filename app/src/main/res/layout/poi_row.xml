@@ -5,46 +5,41 @@
     android:background="@drawable/poi_row"
     android:gravity="center_vertical">
 
-    <LinearLayout
+    <ImageView
+        android:layout_width="@dimen/poi_row_img_width"
+        android:layout_height="wrap_content"
+        android:src="@drawable/barcelona_sil"
+        android:tint="@color/WhiteSmoke"
+        android:scaleType="fitXY"
+        android:paddingLeft="1dp"
+        android:paddingRight="1dp"
+        android:paddingBottom="1dp"
+        android:paddingTop="5dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:id="@+id/poi_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:id="@+id/linearLayout">
-
-        <TextView
-            android:id="@+id/poi_id"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/idDebug"
-            android:layout_marginLeft="@dimen/margin_left_poi_row"
-            android:textSize="24dp"
-            style="@style/StandardText" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/poi_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/titolDebug"
-                android:layout_marginLeft="@dimen/margin_left_poi_row"
-                android:textStyle="bold"
-                style="@style/StandardText" />
+        android:text="@string/idDebug"
+        android:textSize="24dp"
+        style="@style/StandardText"
+        android:layout_marginStart="19dp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentStart="true" />
 
 
-            <TextView
-                android:id="@+id/poi_geo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/geoDebug"
-                android:layout_marginLeft="@dimen/margin_left_poi_row"
-                style="@style/StandardText" />
+    <TextView
+        android:id="@+id/poi_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/titolDebug"
+        android:textStyle="bold"
+        style="@style/rowTitle"
+        android:layout_marginStart="17dp"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@+id/poi_id" />
 
-        </LinearLayout>
-
-    </LinearLayout>
 
 </RelativeLayout>

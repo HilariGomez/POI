@@ -22,13 +22,12 @@ public class Adapter extends RecyclerView.Adapter<Adapter.MyViewHolder> {
     int selectedPosition = 0;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView title, id, geo;
+        public TextView title, id;
 
         public MyViewHolder(View view) {
             super(view);
             title = view.findViewById(R.id.poi_title);
             id = view.findViewById(R.id.poi_id);
-            geo = view.findViewById(R.id.poi_geo);
 
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -66,7 +65,6 @@ public class Adapter extends RecyclerView.Adapter<Adapter.MyViewHolder> {
         InterestPoint poi = poiList.get(position);
         holder.title.setText(poi.getTitle());
         holder.id.setText(poi.getId());
-        holder.geo.setText(poi.getGeoCoordinates());
     }
 
     @Override
